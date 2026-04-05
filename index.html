@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halder & Co. – Estimate System</title>
+    <title>Halder & Co. – Estimate System | Cash Only · No Credit</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -131,6 +131,13 @@
         }
         .btn-outline:hover {
             background: rgba(31,61,43,0.05);
+        }
+        .btn-save {
+            background: #1e7e34;
+            color: white;
+        }
+        .btn-save:hover {
+            background: #155d27;
         }
 
         /* Two columns layout */
@@ -358,6 +365,15 @@
             padding-top: 12px;
             color: var(--primary);
         }
+        .cash-note {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            font-weight: 600;
+            color: #856404;
+            border-radius: 4px;
+        }
         .terms-section {
             margin-top: 30px;
             background: var(--bg);
@@ -389,7 +405,7 @@
             color: var(--muted);
         }
 
-        /* Modal, toast, etc. (same as original but with halder colors) */
+        /* Modal, toast */
         .modal-overlay {
             position: fixed;
             top:0; left:0; right:0; bottom:0;
@@ -465,7 +481,7 @@
 <div class="container">
     <div class="estimate-header-bar no-print">
         <div class="logo-area">
-            <img src="343912.png" alt="Halder & Co. Logo" class="circular-logo" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22%231f3d2b%22%2F%3E%3Ctext%20x%3D%2250%22%20y%3D%2265%22%20text-anchor%3D%22middle%22%20fill%3D%22white%22%20font-size%3D%2240%22%20font-family%3D%22Arial%22%3EHC%3C%2Ftext%3E%3C%2Fsvg%3E'">
+            <img src="34391.png" alt="Halder & Co. Logo" class="circular-logo" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22%231f3d2b%22%2F%3E%3Ctext%20x%3D%2250%22%20y%3D%2265%22%20text-anchor%3D%22middle%22%20fill%3D%22white%22%20font-size%3D%2240%22%20font-family%3D%22Arial%22%3EHC%3C%2Ftext%3E%3C%2Fsvg%3E'">
             <div class="company-details">
                 <h1>HALDER & CO.</h1>
                 <p>Quality Interior Materials at Competitive Rates | Topsia, Kolkata</p>
@@ -475,6 +491,7 @@
         <div class="controls">
             <button class="btn btn-secondary" id="exportBtn"><i class="fas fa-download"></i> Export</button>
             <button class="btn btn-primary" id="updatePreviewBtn"><i class="fas fa-sync-alt"></i> Update Preview</button>
+            <button class="btn btn-save" id="manualSaveBtn"><i class="fas fa-save"></i> Save Estimate</button>
             <button class="btn btn-outline" id="resetBtn"><i class="fas fa-redo"></i> Reset</button>
         </div>
     </div>
@@ -537,7 +554,16 @@
                 <button class="add-item-btn" id="addItemBtn"><i class="fas fa-plus"></i> Add Line Item</button>
             </div>
 
-            <div class="row" style="margin-top: 20px;">
+            <!-- REPLACED ADVANCE PERCENTAGE WITH CASH-ONLY LEGAL STATEMENT -->
+            <div class="form-group">
+                <label>Payment Terms (Cash Only / No Credit)</label>
+                <div style="background: #e9f5e9; padding: 12px; border-radius: 6px; border-left: 4px solid var(--primary);">
+                    <strong>100% payment in advance / Cash on Delivery.</strong><br>
+                    No credit facility is available. Goods will be dispatched only after receipt of full payment.
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="form-group">
                     <label>Tax Rate (CGST/SGST each) %</label>
                     <input type="number" id="taxRate" value="9" step="0.1">
@@ -547,10 +573,7 @@
                     <input type="number" id="roundOff" value="0" step="0.01">
                 </div>
             </div>
-            <div class="form-group">
-                <label>Advance Required (%)</label>
-                <input type="number" id="advancePercent" value="50" min="0" max="100">
-            </div>
+
             <div class="form-group">
                 <label>Special Notes (optional)</label>
                 <textarea id="specialNotes" rows="3" placeholder="Any special instructions..."></textarea>
@@ -559,8 +582,13 @@
                 <label><input type="checkbox" id="includeTerms" checked> Include Terms & Conditions</label>
             </div>
             <div class="form-group">
-                <label>Terms & Conditions</label>
-                <textarea id="termsContent" rows="5">This estimate is valid for 30 days. Advance payment as mentioned above is required to confirm order. Balance payment before delivery. All prices exclusive of GST unless specified. Subject to Kolkata jurisdiction.</textarea>
+                <label>Terms & Conditions (Cash/No Credit legal standard)</label>
+                <textarea id="termsContent" rows="6">1. Payment: 100% advance or cash on delivery. No credit whatsoever.
+2. Delivery: Subject to receipt of full payment and stock availability.
+3. Prices: Exclusive of GST. Tax invoice will be issued on payment.
+4. Claims: Any discrepancy must be reported within 48 hours of delivery.
+5. Jurisdiction: All disputes subject to Kolkata courts only.
+6. This is a quotation, not a contract. Orders confirmed only on full payment.</textarea>
             </div>
             <button class="btn btn-primary" id="updatePreviewBtn2" style="width:100%; margin-top:10px;">Update Preview</button>
         </div>
@@ -606,18 +634,21 @@
                 <div class="summary-row"><span>SGST (<span id="previewSgstRate">9</span>%)</span><span id="previewSgst">0.00</span></div>
                 <div class="summary-row"><span>Round Off</span><span id="previewRoundOff">0.00</span></div>
                 <div class="summary-row total"><span>TOTAL</span><span id="previewTotal">₹0.00</span></div>
-                <div class="summary-row" style="border-bottom:none; margin-top:8px;"><span>Advance (<span id="previewAdvPercent">50</span>%)</span><span id="previewAdvAmount">₹0.00</span></div>
+                <!-- Cash-only note instead of advance amount -->
+                <div class="cash-note">
+                    <i class="fas fa-hand-holding-usd"></i> <strong>Payment:</strong> 100% advance / Cash on Delivery. No credit.
+                </div>
             </div>
             <div id="specialNotesPreview" style="margin-top:15px; background:#f9f9f7; padding:12px; border-radius:6px; display:none;">
                 <strong>Special Notes:</strong> <span id="specialNotesText"></span>
             </div>
             <div class="terms-section" id="termsPreviewSection">
-                <strong>Terms & Conditions</strong>
+                <strong>Terms & Conditions (Cash / No Credit)</strong>
                 <div id="termsPreviewContent" style="margin-top:8px;"></div>
             </div>
             <div class="authorization">
                 <div>
-                    <p><strong>Payment Terms:</strong> <span id="previewPaymentTerms">50% advance, 50% before delivery</span></p>
+                    <p><strong>Payment Terms:</strong> 100% advance or cash on delivery. No credit facility.</p>
                     <p><strong>Bank Details:</strong> HALDER & CO, A/C: 50200119707544, IFSC: HDFC0008949, Branch: BOW BAZAR</p>
                     <p><strong>GSTIN:</strong> 19AASFH5716J1ZS | <strong>PAN:</strong> AASFH5716J</p>
                 </div>
@@ -628,7 +659,7 @@
                 </div>
             </div>
             <div class="footer-note">
-                This is a quotation, not a tax invoice. Tax invoice will be issued on order confirmation.<br>
+                This is a quotation, not a tax invoice. Tax invoice will be issued on full payment.<br>
                 Subject to Kolkata jurisdiction | E. & O.E.
             </div>
         </div>
@@ -663,6 +694,14 @@
     // Helper functions
     function formatDate(dateStr) { if(!dateStr) return ""; let d=new Date(dateStr); return d.toLocaleDateString('en-GB'); }
     function formatCurrency(amt) { return amt.toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+    function showToast(message, type='success') {
+        let toastDiv = document.createElement('div');
+        toastDiv.className = 'toast';
+        toastDiv.innerHTML = `<i class="fas ${type==='success'?'fa-check-circle':'fa-info-circle'}"></i> ${message}`;
+        document.body.appendChild(toastDiv);
+        setTimeout(() => toastDiv.classList.add('show'), 10);
+        setTimeout(() => { toastDiv.classList.remove('show'); setTimeout(()=>toastDiv.remove(), 300); }, 3000);
+    }
     
     // Load from localStorage
     function loadFromStorage() {
@@ -682,28 +721,32 @@
                 document.getElementById('projectLocation').value = data.projectLocation || '';
                 document.getElementById('taxRate').value = data.taxRate || 9;
                 document.getElementById('roundOff').value = data.roundOff || 0;
-                document.getElementById('advancePercent').value = data.advancePercent || 50;
                 document.getElementById('specialNotes').value = data.specialNotes || '';
                 document.getElementById('includeTerms').checked = data.includeTerms !== false;
-                document.getElementById('termsContent').value = data.termsContent || "This estimate is valid for 30 days. Advance payment as mentioned above is required to confirm order. Balance payment before delivery. All prices exclusive of GST unless specified. Subject to Kolkata jurisdiction.";
+                document.getElementById('termsContent').value = data.termsContent || "1. Payment: 100% advance or cash on delivery. No credit whatsoever.\n2. Delivery: Subject to receipt of full payment and stock availability.\n3. Prices: Exclusive of GST. Tax invoice will be issued on payment.\n4. Claims: Any discrepancy must be reported within 48 hours of delivery.\n5. Jurisdiction: All disputes subject to Kolkata courts only.\n6. This is a quotation, not a contract. Orders confirmed only on full payment.";
                 return true;
             } catch(e) {}
         }
         return false;
     }
-    function saveToStorage() {
+    function saveToStorage(showToastMsg = false) {
         const data = {
             items, estNo: document.getElementById('estNo').value, estDate: document.getElementById('estDate').value,
             validUntil: document.getElementById('validUntil').value, poNumber: document.getElementById('poNumber').value,
             clientName: document.getElementById('clientName').value, clientGst: document.getElementById('clientGst').value,
             clientPhone: document.getElementById('clientPhone').value, clientAddress: document.getElementById('clientAddress').value,
             projectLocation: document.getElementById('projectLocation').value, taxRate: document.getElementById('taxRate').value,
-            roundOff: document.getElementById('roundOff').value, advancePercent: document.getElementById('advancePercent').value,
-            specialNotes: document.getElementById('specialNotes').value, includeTerms: document.getElementById('includeTerms').checked,
-            termsContent: document.getElementById('termsContent').value
+            roundOff: document.getElementById('roundOff').value, specialNotes: document.getElementById('specialNotes').value,
+            includeTerms: document.getElementById('includeTerms').checked, termsContent: document.getElementById('termsContent').value
         };
         localStorage.setItem('halder_estimate', JSON.stringify(data));
+        if(showToastMsg) showToast('Estimate saved successfully!');
     }
+    
+    // Manual save button
+    document.getElementById('manualSaveBtn').addEventListener('click', () => {
+        saveToStorage(true);
+    });
     
     // Render items editor
     function renderEditor() {
@@ -795,11 +838,6 @@
         document.getElementById('previewSgst').innerText = formatCurrency(sgst);
         document.getElementById('previewRoundOff').innerText = formatCurrency(roundOff);
         document.getElementById('previewTotal').innerHTML = '₹'+formatCurrency(total);
-        let advPercent = parseFloat(document.getElementById('advancePercent').value) || 0;
-        let advAmt = total * advPercent / 100;
-        document.getElementById('previewAdvPercent').innerText = advPercent;
-        document.getElementById('previewAdvAmount').innerHTML = '₹'+formatCurrency(advAmt);
-        document.getElementById('previewPaymentTerms').innerText = advPercent+'% advance, '+(100-advPercent)+'% before delivery';
         // Special notes
         let special = document.getElementById('specialNotes').value;
         if(special.trim()) {
@@ -817,7 +855,7 @@
         saveToStorage();
     }
     
-    // Logo watermark
+    // Logo watermark (now using 34391.png)
     function setWatermark() {
         let img = new Image();
         img.crossOrigin = 'Anonymous';
@@ -830,7 +868,7 @@
             let watermarkDiv = document.getElementById('watermarkDiv');
             if(watermarkDiv) watermarkDiv.style.backgroundImage = `url('${logoDataUrl}')`;
         };
-        img.src = '343912.png';
+        img.src = '34391.png';
         img.onerror = () => { document.getElementById('watermarkDiv').style.backgroundColor = 'rgba(31,61,43,0.02)'; };
     }
     setWatermark();
@@ -843,7 +881,7 @@
     
     // Reset
     function resetAll() {
-        if(confirm('Reset all data?')) {
+        if(confirm('Reset all data? This will erase the current estimate.')) {
             items = [{ slNo:1, name:"", hsn:"", qty:1, price:0, unit:"Pcs", total:0 }];
             document.getElementById('estNo').value = '';
             document.getElementById('estDate').value = new Date().toISOString().split('T')[0];
@@ -857,21 +895,21 @@
             document.getElementById('projectLocation').value = '';
             document.getElementById('taxRate').value = 9;
             document.getElementById('roundOff').value = 0;
-            document.getElementById('advancePercent').value = 50;
             document.getElementById('specialNotes').value = '';
             document.getElementById('includeTerms').checked = true;
-            document.getElementById('termsContent').value = "This estimate is valid for 30 days. Advance payment as mentioned above is required to confirm order. Balance payment before delivery. All prices exclusive of GST unless specified. Subject to Kolkata jurisdiction.";
+            document.getElementById('termsContent').value = "1. Payment: 100% advance or cash on delivery. No credit whatsoever.\n2. Delivery: Subject to receipt of full payment and stock availability.\n3. Prices: Exclusive of GST. Tax invoice will be issued on payment.\n4. Claims: Any discrepancy must be reported within 48 hours of delivery.\n5. Jurisdiction: All disputes subject to Kolkata courts only.\n6. This is a quotation, not a contract. Orders confirmed only on full payment.";
             renderEditor();
             updatePreview();
             localStorage.removeItem('halder_estimate');
+            showToast('Estimate reset to default', 'info');
         }
     }
     document.getElementById('resetBtn').addEventListener('click', resetAll);
     document.getElementById('updatePreviewBtn').addEventListener('click', updatePreview);
     document.getElementById('updatePreviewBtn2').addEventListener('click', updatePreview);
     
-    // Auto save on input
-    const inputs = ['estNo','estDate','validUntil','poNumber','clientName','clientGst','clientPhone','clientAddress','projectLocation','taxRate','roundOff','advancePercent','specialNotes','termsContent'];
+    // Auto save on input (without extra toast)
+    const inputs = ['estNo','estDate','validUntil','poNumber','clientName','clientGst','clientPhone','clientAddress','projectLocation','taxRate','roundOff','specialNotes','termsContent'];
     inputs.forEach(id => { document.getElementById(id)?.addEventListener('input', updatePreview); });
     document.getElementById('includeTerms')?.addEventListener('change', updatePreview);
     
@@ -879,7 +917,6 @@
     const exportModal = document.getElementById('exportModal');
     const exportBtn = document.getElementById('exportBtn');
     let selectedType = null;
-    function showToast(msg) { alert(msg); } // simple
     exportBtn.onclick = () => exportModal.classList.add('active');
     document.getElementById('closeModalBtn').onclick = () => exportModal.classList.remove('active');
     document.getElementById('cancelExportBtn').onclick = () => exportModal.classList.remove('active');
@@ -891,11 +928,9 @@
             document.getElementById('confirmExportBtn').disabled = false;
         };
     });
-    // Generate print HTML
     function getPrintHtml() {
         const previewClone = document.getElementById('previewPanel').cloneNode(true);
-        // remove watermark absolute for print? keep but fine
-        return '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Halder & Co. Estimate</title><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>body { font-family: "Source Sans 3", sans-serif; margin: 20mm; } .watermark { opacity: 0.05; } .no-print { display: none; } .estimate-table { width:100%; border-collapse:collapse; } th, td { border-bottom:1px solid #ddd; padding:8px; } .summary { max-width:320px; margin-left:auto; } .authorization { display:flex; justify-content:space-between; margin-top:30px; }</style></head><body>'+previewClone.outerHTML+'</body></html>';
+        return '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Halder & Co. Estimate</title><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>body { font-family: "Source Sans 3", sans-serif; margin: 20mm; } .watermark { opacity: 0.05; } .no-print { display: none; } .estimate-table { width:100%; border-collapse:collapse; } th, td { border-bottom:1px solid #ddd; padding:8px; } .summary { max-width:320px; margin-left:auto; } .authorization { display:flex; justify-content:space-between; margin-top:30px; } .cash-note { background:#fff3cd; padding:8px; }</style></head><body>'+previewClone.outerHTML+'</body></html>';
     }
     async function generatePDF() {
         const html = getPrintHtml();
