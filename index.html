@@ -554,7 +554,7 @@
                 <button class="add-item-btn" id="addItemBtn"><i class="fas fa-plus"></i> Add Line Item</button>
             </div>
 
-            <!-- REPLACED ADVANCE PERCENTAGE WITH CASH-ONLY LEGAL STATEMENT -->
+            <!-- CASH ONLY LEGAL STATEMENT -->
             <div class="form-group">
                 <label>Payment Terms (Cash Only / No Credit)</label>
                 <div style="background: #e9f5e9; padding: 12px; border-radius: 6px; border-left: 4px solid var(--primary);">
@@ -582,13 +582,20 @@
                 <label><input type="checkbox" id="includeTerms" checked> Include Terms & Conditions</label>
             </div>
             <div class="form-group">
-                <label>Terms & Conditions (Cash/No Credit legal standard)</label>
-                <textarea id="termsContent" rows="6">1. Payment: 100% advance or cash on delivery. No credit whatsoever.
-2. Delivery: Subject to receipt of full payment and stock availability.
-3. Prices: Exclusive of GST. Tax invoice will be issued on payment.
-4. Claims: Any discrepancy must be reported within 48 hours of delivery.
-5. Jurisdiction: All disputes subject to Kolkata courts only.
-6. This is a quotation, not a contract. Orders confirmed only on full payment.</textarea>
+                <label>Terms & Conditions (with rate fluctuation protection)</label>
+                <textarea id="termsContent" rows="8">1. PRICE VALIDITY & FLUCTUATION: This estimate is valid for 30 days from the date of issue. All prices quoted are based on current market rates. Halder & Co. expressly reserves the right to revise prices if material costs change before order confirmation. Any price adjustment will be communicated in writing.
+
+2. PAYMENT: 100% advance or cash on delivery. No credit facility is extended.
+
+3. DELIVERY: Subject to receipt of full payment and stock availability.
+
+4. TAXES: All prices are exclusive of GST. Tax invoice will be issued on full payment.
+
+5. CLAIMS: Any discrepancy must be reported within 48 hours of delivery.
+
+6. JURISDICTION: All disputes subject to Kolkata courts only.
+
+7. ACCEPTANCE: This is a quotation, not a contract. Orders are confirmed only on receipt of full payment.</textarea>
             </div>
             <button class="btn btn-primary" id="updatePreviewBtn2" style="width:100%; margin-top:10px;">Update Preview</button>
         </div>
@@ -598,6 +605,8 @@
             <div class="watermark" id="watermarkDiv"></div>
             <div class="estimate-header-preview">
                 <div>
+                    <!-- Logo added in header for print/export -->
+                    <img src="34391.png" alt="Halder & Co." style="width: 50px; height: 50px; border-radius: 50%; margin-bottom: 10px; border: 1px solid var(--primary);">
                     <div class="estimate-title">ESTIMATE / QUOTATION</div>
                     <div style="margin-top: 8px;">
                         <strong>Halder & Co.</strong><br>
@@ -634,7 +643,6 @@
                 <div class="summary-row"><span>SGST (<span id="previewSgstRate">9</span>%)</span><span id="previewSgst">0.00</span></div>
                 <div class="summary-row"><span>Round Off</span><span id="previewRoundOff">0.00</span></div>
                 <div class="summary-row total"><span>TOTAL</span><span id="previewTotal">₹0.00</span></div>
-                <!-- Cash-only note instead of advance amount -->
                 <div class="cash-note">
                     <i class="fas fa-hand-holding-usd"></i> <strong>Payment:</strong> 100% advance / Cash on Delivery. No credit.
                 </div>
@@ -643,7 +651,7 @@
                 <strong>Special Notes:</strong> <span id="specialNotesText"></span>
             </div>
             <div class="terms-section" id="termsPreviewSection">
-                <strong>Terms & Conditions (Cash / No Credit)</strong>
+                <strong>Terms & Conditions (including price fluctuation clause)</strong>
                 <div id="termsPreviewContent" style="margin-top:8px;"></div>
             </div>
             <div class="authorization">
@@ -723,7 +731,7 @@
                 document.getElementById('roundOff').value = data.roundOff || 0;
                 document.getElementById('specialNotes').value = data.specialNotes || '';
                 document.getElementById('includeTerms').checked = data.includeTerms !== false;
-                document.getElementById('termsContent').value = data.termsContent || "1. Payment: 100% advance or cash on delivery. No credit whatsoever.\n2. Delivery: Subject to receipt of full payment and stock availability.\n3. Prices: Exclusive of GST. Tax invoice will be issued on payment.\n4. Claims: Any discrepancy must be reported within 48 hours of delivery.\n5. Jurisdiction: All disputes subject to Kolkata courts only.\n6. This is a quotation, not a contract. Orders confirmed only on full payment.";
+                document.getElementById('termsContent').value = data.termsContent || "1. PRICE VALIDITY & FLUCTUATION: This estimate is valid for 30 days from the date of issue. All prices quoted are based on current market rates. Halder & Co. expressly reserves the right to revise prices if material costs change before order confirmation. Any price adjustment will be communicated in writing.\n\n2. PAYMENT: 100% advance or cash on delivery. No credit facility is extended.\n\n3. DELIVERY: Subject to receipt of full payment and stock availability.\n\n4. TAXES: All prices are exclusive of GST. Tax invoice will be issued on full payment.\n\n5. CLAIMS: Any discrepancy must be reported within 48 hours of delivery.\n\n6. JURISDICTION: All disputes subject to Kolkata courts only.\n\n7. ACCEPTANCE: This is a quotation, not a contract. Orders are confirmed only on receipt of full payment.";
                 return true;
             } catch(e) {}
         }
@@ -897,7 +905,7 @@
             document.getElementById('roundOff').value = 0;
             document.getElementById('specialNotes').value = '';
             document.getElementById('includeTerms').checked = true;
-            document.getElementById('termsContent').value = "1. Payment: 100% advance or cash on delivery. No credit whatsoever.\n2. Delivery: Subject to receipt of full payment and stock availability.\n3. Prices: Exclusive of GST. Tax invoice will be issued on payment.\n4. Claims: Any discrepancy must be reported within 48 hours of delivery.\n5. Jurisdiction: All disputes subject to Kolkata courts only.\n6. This is a quotation, not a contract. Orders confirmed only on full payment.";
+            document.getElementById('termsContent').value = "1. PRICE VALIDITY & FLUCTUATION: This estimate is valid for 30 days from the date of issue. All prices quoted are based on current market rates. Halder & Co. expressly reserves the right to revise prices if material costs change before order confirmation. Any price adjustment will be communicated in writing.\n\n2. PAYMENT: 100% advance or cash on delivery. No credit facility is extended.\n\n3. DELIVERY: Subject to receipt of full payment and stock availability.\n\n4. TAXES: All prices are exclusive of GST. Tax invoice will be issued on full payment.\n\n5. CLAIMS: Any discrepancy must be reported within 48 hours of delivery.\n\n6. JURISDICTION: All disputes subject to Kolkata courts only.\n\n7. ACCEPTANCE: This is a quotation, not a contract. Orders are confirmed only on receipt of full payment.";
             renderEditor();
             updatePreview();
             localStorage.removeItem('halder_estimate');
