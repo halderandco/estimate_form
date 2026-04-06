@@ -860,7 +860,6 @@
         <div class="export-options">
             <div class="export-option" data-type="print"><i class="fas fa-print fa-2x"></i><br>Print</div>
             <div class="export-option" data-type="pdf"><i class="fas fa-file-pdf fa-2x"></i><br>Download PDF</div>
-            <div class="export-option" data-type="docx"><i class="fas fa-file-word fa-2x"></i><br>DOCX</div>
             <div class="export-option" data-type="preview"><i class="fas fa-eye fa-2x"></i><br>Preview</div>
         </div>
         <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
@@ -874,7 +873,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/html-docx-js/dist/html-docx.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('currentYear').textContent = new Date().getFullYear();
@@ -1046,7 +1044,7 @@
             saveToStorage();
         }
         
-        // Logo watermark and data URL for PDF & DOCX
+        // Logo watermark and data URL for PDF
         function setWatermarkAndLogoData() {
             return new Promise((resolve) => {
                 let img = new Image();
@@ -1200,30 +1198,6 @@
             }
         }
         
-        async function generateDocx() {
-            const confirmBtn = document.getElementById('confirmExportBtn');
-            confirmBtn.disabled = true;
-            showToast('Preparing DOCX, please wait...', 'info');
-            try {
-                if(!logoDataUrl) await setWatermarkAndLogoData();
-                let docxHtml = getPrintHtml();
-                const converted = htmlDocx.asBlob(docxHtml, { orientation: 'portrait' });
-                const estNo = document.getElementById('estNo').value || 'Draft';
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(converted);
-                link.download = `Halder_Estimate_${estNo}.docx`;
-                link.click();
-                URL.revokeObjectURL(link.href);
-                confirmBtn.disabled = false;
-                exportModal.classList.remove('active');
-                showToast('DOCX downloaded successfully');
-            } catch (err) {
-                console.error(err);
-                confirmBtn.disabled = false;
-                showToast('DOCX generation failed. Please try again.', 'error');
-            }
-        }
-        
         function directPrint() {
             const win = window.open();
             win.document.write(getPrintHtml());
@@ -1244,7 +1218,6 @@
         document.getElementById('confirmExportBtn').onclick = () => {
             if(selectedType === 'print') directPrint();
             else if(selectedType === 'pdf') generatePDF();
-            else if(selectedType === 'docx') generateDocx();
             else if(selectedType === 'preview') showPreview();
             selectedType = null;
             document.getElementById('confirmExportBtn').disabled = true;
