@@ -94,6 +94,17 @@
             }
         }
 
+        @media (max-width: 480px) {
+            .controls {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .controls .btn {
+                flex: 1 0 auto;
+                justify-content: center;
+            }
+        }
+
         .logo-area {
             display: flex;
             align-items: center;
@@ -766,7 +777,7 @@
             <div class="watermark" id="watermarkDiv"></div>
             <div class="estimate-header-preview">
                 <div>
-                    <img src="34391.png" alt="Halder & Co." style="width: 50px; height: 50px; border-radius: 50%; margin-bottom: 8px; border: 1px solid var(--primary);">
+                    <img src="34391.png" alt="Halder & Co." style="width: 50px; height: 50px; border-radius: 50%; margin-bottom: 8px; border: 1px solid var(--primary);" id="previewLogoImg">
                     <div class="estimate-title">ESTIMATE / QUOTATION</div>
                     <div style="margin-top: 8px; font-size: 12px;">
                         <strong>Halder & Co.</strong><br>
@@ -849,6 +860,7 @@
         <div class="export-options">
             <div class="export-option" data-type="print"><i class="fas fa-print fa-2x"></i><br>Print</div>
             <div class="export-option" data-type="pdf"><i class="fas fa-file-pdf fa-2x"></i><br>Download PDF</div>
+            <div class="export-option" data-type="docx"><i class="fas fa-file-word fa-2x"></i><br>DOCX</div>
             <div class="export-option" data-type="preview"><i class="fas fa-eye fa-2x"></i><br>Preview</div>
         </div>
         <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
@@ -862,6 +874,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html-docx-js/dist/html-docx.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('currentYear').textContent = new Date().getFullYear();
@@ -1033,7 +1046,7 @@
             saveToStorage();
         }
         
-        // Logo watermark and data URL for PDF
+        // Logo watermark and data URL for PDF & DOCX
         function setWatermarkAndLogoData() {
             return new Promise((resolve) => {
                 let img = new Image();
@@ -1047,6 +1060,8 @@
                     logoDataUrl = canvas.toDataURL('image/png');
                     let watermarkDiv = document.getElementById('watermarkDiv');
                     if(watermarkDiv) watermarkDiv.style.backgroundImage = `url('${logoDataUrl}')`;
+                    const previewLogo = document.getElementById('previewLogoImg');
+                    if(previewLogo) previewLogo.src = logoDataUrl;
                     resolve();
                 };
                 img.onerror = function() {
@@ -1126,6 +1141,10 @@
         
         function getPrintHtml() {
             const clone = document.getElementById('previewPanel').cloneNode(true);
+            if(logoDataUrl) {
+                const logoImg = clone.querySelector('#previewLogoImg');
+                if(logoImg) logoImg.src = logoDataUrl;
+            }
             return '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Halder & Co. Estimate</title><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>body { font-family: "Source Sans 3", sans-serif; margin: 20mm; } .watermark { opacity: 0.05; } .no-print { display: none; } .estimate-table { width:100%; border-collapse:collapse; } th, td { border-bottom:1px solid #ddd; padding:8px; } .estimate-summary { max-width:320px; margin-left:auto; } .authorization { display:flex; justify-content:space-between; margin-top:30px; } .cash-note { background:#fff3cd; padding:8px; }</style></head><body>'+clone.outerHTML+'</body></html>';
         }
         
@@ -1181,6 +1200,30 @@
             }
         }
         
+        async function generateDocx() {
+            const confirmBtn = document.getElementById('confirmExportBtn');
+            confirmBtn.disabled = true;
+            showToast('Preparing DOCX, please wait...', 'info');
+            try {
+                if(!logoDataUrl) await setWatermarkAndLogoData();
+                let docxHtml = getPrintHtml();
+                const converted = htmlDocx.asBlob(docxHtml, { orientation: 'portrait' });
+                const estNo = document.getElementById('estNo').value || 'Draft';
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(converted);
+                link.download = `Halder_Estimate_${estNo}.docx`;
+                link.click();
+                URL.revokeObjectURL(link.href);
+                confirmBtn.disabled = false;
+                exportModal.classList.remove('active');
+                showToast('DOCX downloaded successfully');
+            } catch (err) {
+                console.error(err);
+                confirmBtn.disabled = false;
+                showToast('DOCX generation failed. Please try again.', 'error');
+            }
+        }
+        
         function directPrint() {
             const win = window.open();
             win.document.write(getPrintHtml());
@@ -1201,6 +1244,7 @@
         document.getElementById('confirmExportBtn').onclick = () => {
             if(selectedType === 'print') directPrint();
             else if(selectedType === 'pdf') generatePDF();
+            else if(selectedType === 'docx') generateDocx();
             else if(selectedType === 'preview') showPreview();
             selectedType = null;
             document.getElementById('confirmExportBtn').disabled = true;
